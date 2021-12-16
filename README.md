@@ -1,13 +1,13 @@
 # PoC To Create A Keyless Signed OCI Helm Chart
 
-# Requirements
+## Requirements
 
 - CR_PAT for the GitHub container registry
 
 See [this guide](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry)
 for more information on how to create a personal access token.
 
-# Task
+## Task
 
 Task is a task runner / build tool that aims to be simpler and easier to use than, for example, GNU Make.
 
@@ -44,7 +44,7 @@ tasks:
 
 And has a purge and default task inside.
 
-# Helm
+## Helm
 
 Helm 3 supports OCI for package distribution. Chart packages are able to be stored and shared across OCI-based
 registries.
@@ -60,16 +60,16 @@ export HELM_EXPERIMENTAL_OCI=1
 We're going to use `helm package` to create a the chart package and with `helm push` to push it to the OCI registry. In
 this case , we will use `ghcr.io` as the registry.
 
-# Cosign
+## Cosign
 
 To use `cosign` to sign keyless our OCI chart, we need to create set `COSIGN_EXPERIMENTAL` in the environment of
 our `Taskfile.yml` task `default` and of course have the `cosign` binary installed.
 
-# GitHub Action
+## GitHub Action
 
 To use keyless signing in GitHub Actions, we need do following steps:
 
-## Step 1: Enable OCI Support
+### Step 1: Enable OCI Support
 
 Add permissions to add `id-token` to the `permissions` section.
 
@@ -78,7 +78,7 @@ permissions:
   id-token: write
 ```
 
-## Step 2: Install Cosign
+### Step 2: Install Cosign
 
 Just add this GitHub Action to your workflow:
 
@@ -102,7 +102,7 @@ workflow:
     OWNER: ${{ github.repository_owner }}
 ```
 
-# Result
+## Result
 
 If everything works, you should see the following output:
 
@@ -128,9 +128,10 @@ tlog entry created with index: 955563
 Pushing signature to: ghcr.io/dirien/signed-helm-chart
 ```
 
-# Resources
+## Resources
 
-- [go-task](https://taskfile.dev/#/)
+- [go-task](https://taskfile.dev/)
 - [cosign](https://github.com/sigstore/cosign)
 - [helm](https://helm.sh/)
 - [GitHub Actions](https://docs.github.com/en/actions)
+- [Zero-friction “keyless signing” with Github Actions](https://chainguard.dev/posts/2021-12-01-zero-friction-keyless-signing)
