@@ -6,7 +6,7 @@ on:
       - '*'
 
 jobs:
-  build:
+  build-and-sign-chart:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -18,20 +18,22 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install cosign
-        uses: sigstore/cosign-installer@main
+        uses: sigstore/cosign-installer@v1.4.1
         with:
           cosign-release: 'v1.4.1'
-
-      - name: ghcr-login
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Task
         uses: arduino/setup-task@v1
 
-      - name: Sign the container image
+      - name: Log into ghcr.io
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
+
+      - name: Build the helm chart and sign the oci image
         run: task
+        env:
+          CR_PAT: ${{ secrets.CR_PAT }}
+          OWNER: ${{ github.repository_owner }}

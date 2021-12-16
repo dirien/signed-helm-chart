@@ -13,7 +13,11 @@ tasks:
       - purge
     cmds:
       - mkdir dist
+      - echo $CR_PAT | helm registry login ghcr.io --username $OWNER --password-stdin
       - helm package signed-helm-chart --destination dist
-      - helm push dist/signed-helm-chart-*.tgz oci://ghcr.io/dirien/
+      - helm push dist/signed-helm-chart-*.tgz oci://ghcr.io/dirien/ > .digest
+      - cat .digest | awk -F "[, ]+" '/Digest/{print $NF}'
+      - cosign sign ghcr.io/dirien/signed-helm-chart@$(cat .digest | awk -F "[, ]+" '/Digest/{print $NF}')
     env:
       HELM_EXPERIMENTAL_OCI: 1
+      COSIGN_EXPERIMENTAL: "true"
