@@ -1,0 +1,19 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  purge:
+    cmds:
+      - echo "Purging..."
+      - rm -rf dist
+
+  default:
+    deps:
+      - purge
+    cmds:
+      - mkdir dist
+      - helm package signed-helm-chart --destination dist
+      - helm push dist/signed-helm-chart-*.tgz oci://ghcr.io/dirien/
+    env:
+      HELM_EXPERIMENTAL_OCI: 1
