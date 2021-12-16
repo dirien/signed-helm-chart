@@ -128,6 +128,15 @@ tlog entry created with index: 955563
 Pushing signature to: ghcr.io/dirien/signed-helm-chart
 ```
 
+## Open Points - Helm Provenance and Integrity
+
+What we need to improve now is: `helm verify` needs to check that the chart been signed and is valid.
+
+Currently, Helm does not support the `cosign` to verify the signature of the chart.
+
+See the [documentation](https://helm.sh/docs/topics/provenance/) about the supported Helm Provenance and Integrity
+mechanisms.
+
 ## Resources
 
 - [go-task](https://taskfile.dev/)
